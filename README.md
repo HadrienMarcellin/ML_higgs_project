@@ -1,6 +1,7 @@
 ### Overview
 
-The project is part of the EPFL's Machine Learning class. 
+The project is part of the EPFL's Machine Learning class.
+Project Description is [here](https://www.kaggle.com/c/epfml18-higgs)
 
 ### Download and install
 
