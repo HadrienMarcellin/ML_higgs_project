@@ -121,7 +121,7 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
     for n_iter in range(max_iters):
         # compute loss, gradient
         grad, err = compute_gradient(y, tx, w)
-        loss = calculate_mse(err)
+        loss = calculate_mae(err)
         # gradient w by descent update
         w = w - gamma * grad
         # store w and loss
