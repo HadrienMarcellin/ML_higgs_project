@@ -20,9 +20,15 @@ def transform_to_nan(x, thresh):
         N x D matrix, with same size as input with np.nan values instead of np.float.
     """
     tx = x.copy()  
-    tx[tx < thresh] = np.nan
+    tx[tx < thresh] = 0
     
     return tx
+
+#####################################  --  log -- ###################################
+#mettre en log les features qui ont une distribution enxponentielle
+def log(feature):
+    logfeature = np.log(feature)
+    return logfeature
 
 
 #####################################  --  NORMALIZE -- ###################################
