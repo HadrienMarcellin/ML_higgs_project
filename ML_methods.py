@@ -2,6 +2,29 @@
 """machine learning functions for project 1."""
 import numpy as np
 
+##################################### -- TRANSFORM -999 values to NAN -- ##################
+def transform_to_nan(x, thresh):
+    """   
+    Parameters 
+    -----------
+    tx : np.array
+        N x D matrix with features' values. Rows are samples and coluns are features.
+    thresh : float
+        value underwhich we consider the feature as NAN.
+    make_copy : bool
+        If True, make a copy of tx before computation, False will overwrite
+   
+    Returns
+    ----------
+    tx_nan : np.array
+        N x D matrix, with same size as input with np.nan values instead of np.float.
+    """
+    tx = x.copy()  
+    tx[tx < thresh] = np.nan
+    
+    return tx
+
+
 #####################################  --  NORMALIZE -- ###################################
 
 def standardize(x):
@@ -12,6 +35,51 @@ def standardize(x):
     x = x / std_x
     return x, mean_x, std_x
 
+def standardize_with_nan(x):
+    """
+    Standardize the data, removing the mean and dividing by the standard deviation. 
+    If some values are under the threshold, they are not considered in the operation and left untouched.
+    
+    Parameters
+    ----------
+    tx : np.array
+        N x D matrix with features' values. Rows are samples and coluns are features.
+    make_copy : bool
+        If True, make a copy of tx before computation, False will overwrite
+    
+    Returns
+    -------
+    tx_normalized : np.array
+        N x D matrix, with same size as input with normalized features.
+    """
+    tx = x.copy()
+    mean_x = np.nanmean(x)
+    tx = tx - mean_x
+    std_x = np.nanstd(x)
+    tx = tx / std_x
+    
+    return tx, mean_x, std_x
+
+##################################### -- Remove Missing Data -- #####################
+
+def remove_missing_data(tx, thresh, sample_feature):
+    
+    n_sample = tx.shape[0]
+    n_feature = tx.shape[1]
+    
+    tx_cleaned = tx.copy()
+    tx_cleaned[tx_cleaned < thresh ] = np.nan
+    
+    rows_to_delete = []
+    
+    for i, sample in enumerate(tx_cleaned):
+        if (np.count_nonzero(~np.isnan(sample)) < (1-sample_feature) * n_feature):
+            rows_to_delete.append(i)
+           
+    
+    tx_cleaned = np.delete(tx_cleaned, rows_to_delete, axis = 0)
+    
+    return tx_cleaned
 
 #####################################  --  MSE -- ###################################
 
