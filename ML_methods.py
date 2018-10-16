@@ -54,9 +54,9 @@ def standardize_with_nan(x):
         N x D matrix, with same size as input with normalized features.
     """
     tx = x.copy()
-    mean_x = np.nanmean(x)
+    mean_x = np.nanmean(x, axis = 0)
     tx = tx - mean_x
-    std_x = np.nanstd(x)
+    std_x = np.nanstd(x, axis = 0)
     tx = tx / std_x
     
     return tx, mean_x, std_x
