@@ -29,11 +29,12 @@ def transform_to_nan(x, thresh):
 
 def standardize(x):
     """Standardize the original data set."""
-    mean_x = np.mean(x)
+    mean_x = np.mean(x, axis = 1)
     x = x - mean_x
-    std_x = np.std(x)
+    std_x = np.std(x, axis = 1)
     x = x / std_x
     return x, mean_x, std_x
+        
 
 def standardize_with_nan(x):
     """
