@@ -2,6 +2,58 @@
 """machine learning functions for project 1."""
 import numpy as np
 
+
+def create_cross_validation_datasets(N, nb_sets):
+    
+    test_percentage = 1/nb_sets
+    test_length = int(round(N*test_percentage))
+    train_length = int(N-test_length)
+    
+    random_indices = np.random.permutation(N)
+    
+    train_indices = np.zeros((train_length, nb_sets))
+    test_indices = np.zeros((test_length, nb_sets))
+    
+    for i in range(nb_sets):
+        train_indices[:,i] = np.delete(random_indices, list(range(i * test_length, (i + 1) * test_length)))
+        test_indices[:,i] = random_indices[i * test_length : (i+1)*test_length]
+
+    return test_indices, train_indices
+
+def transfom_feature_log(x, features):
+    
+    tx = x.copy()
+    
+    for i in features:
+        feature = tx[:,i] + abs(np.min(tx[:,i])) + 0.1 #pour enlever les valeurs négatives
+        logfeature = log(feature)
+        tx[:, i] = logfeature
+    
+    return tx
+
+
+##################################### -- TRANSFORM NAN values to 0 -- ##################
+
+def transform_nan_to_zero(x):
+    """   
+    Parameters 
+    -----------
+    tx : np.array
+        N x D matrix with features' values. Rows are samples and coluns are features.
+    make_copy : bool
+        If True, make a copy of tx before computation, False will overwrite
+   
+    Returns
+    ----------
+    tx_nan : np.array
+        N x D matrix, with same size as input with 0 values instead of np.nan.
+    """
+    tx = x.copy()  
+    tx[np.isnan(tx)] = 0
+    
+    return tx
+
+
 ##################################### -- TRANSFORM -999 values to NAN -- ##################
 def transform_to_nan(x, thresh):
     """   
@@ -20,7 +72,7 @@ def transform_to_nan(x, thresh):
         N x D matrix, with same size as input with np.nan values instead of np.float.
     """
     tx = x.copy()  
-    tx[tx < thresh] = 0
+    tx[tx < thresh] = np.nan
     
     return tx
 

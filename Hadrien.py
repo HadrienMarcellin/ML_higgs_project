@@ -100,3 +100,36 @@ def NAN_values_overview(tx, nb_bins):
     axs[1].set_ylabel("number of features")
 
     plt.show()
+    
+    
+    
+def NAN_values_overview_matrix(x, y):
+    
+    """
+    This function aims to display the distribution of NAN values per features and per samples. We consider NAN values as such when their value is under the given threshold.
+    This is usefull to identify if some features/samples are relevant to keep or discard.
+    
+    Parameters
+    ----------
+    tx : np.array
+        N x D matrix of features. Rows are samples and coluns are features.
+    nb_bins : int
+        Number of bins for histogram display.
+        
+    Returns
+    -------
+    """
+    
+    tx = x.copy()
+    indices = np.argsort(y)
+    tx = tx[indices]
+    
+    tx = tx + 999
+    
+    fig, axs = plt.subplots(1, 1, figsize=(5,10))
+    ax1 = axs
+
+    ax1.spy(tx, aspect = 'auto')
+
+
+    plt.show()
