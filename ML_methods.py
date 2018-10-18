@@ -52,37 +52,6 @@ def transform_nan_to_zero(x):
     tx[np.isnan(tx)] = 0
     
     return tx
-##################################### -- TRANSFORM -999 values to the average of the column -- ##################
-
-def put_average_NaN(tx,thresh):
-    '''
-    Replace NaN values by the average of their corresponding features + add new dim (feature) for each feature 
-    that contain at least one Nan Value. sample will have value 1 if NaN, 0 Otherwise 
-
-     Parameters
-        ----------
-
-        tx : np.array
-            N x D matrix of features. Rows are samples and coluns are features.
-        thresh : float
-            threshold under which we consider the value as NAN
-        -------
-
-    Return: new data set (newtx : np.array N x D++) 
-    '''
-    newtx=tx.copy()
-    print(newtx.shape)
-    nbsample=newtx.shape[0]
-
-    for i, feature in enumerate(tx.T):
-        xtrue_mean = feature[feature> thresh].mean()
-        print(xtrue_mean)
-        missraw=np.where(feature == thresh) 
-        newtx[missraw,i]=xtrue_mean
-        #now creating new column
-        newtx=np.c_[newtx,np.zeros(nbsample)]
-        newtx[missraw,newtx.shape[1]-1]=1
-    return newtx
 
 
 ##################################### -- TRANSFORM -999 values to NAN -- ##################
@@ -281,6 +250,15 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
         end_index = min((batch_num + 1) * batch_size, data_size)
         if start_index != end_index:
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
+
+#####################################  --  LEAST SQUARE  -- ###################################
+
+def least_squares(y, tx):
+    """calculate the least squares solution."""
+    a = tx.T.dot(tx)
+    b = tx.T.dot(y)
+    return np.linalg.solve(a, b)
+
 
 
 
