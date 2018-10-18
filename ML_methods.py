@@ -256,7 +256,6 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
 #####################################  --  RIDGE REGRESSION  -- ###################################
 
 def ridge_regression(y, tx, lamb):
-    """implement ridge regression."""
     aI = lamb * np.identity(tx.shape[1])
     a = tx.T.dot(tx) + aI
     b = tx.T.dot(y)
