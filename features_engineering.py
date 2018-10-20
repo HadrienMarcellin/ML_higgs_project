@@ -53,11 +53,11 @@ def separate_PRI_jet_num(x):
     
     for i in l:
         if(x(i, 22) == 1):
-            tx1 = np.vstack([tx1, x(i, :)])
-        elseif(x(i, 22) == 2):
-            tx2 = np.vstack([tx2, x(i, :)])
-        elseif(x(i, 22) == 3):
-            tx3 = np.vstack([tx3, x(i, :)])
+            tx1 = np.vstack([tx1, x(i, c)])
+        elif(x(i, 22) == 2):
+            tx2 = np.vstack([tx2, x(i, c)])
+        elif(x(i, 22) == 3):
+            tx3 = np.vstack([tx3, x(i, c)])
             
     return tx1, tx2, tx3
     
