@@ -43,24 +43,32 @@ def transform_feature_cos(x, features):
 
 #####################################  --  SEPARATE PRI_jet_num -- ###################################
 
-def separate_PRI_jet_num(x):
+def separate_PRI_jet_num(x, y):
     (l, c) = np.shape(x)
     
     tx0 = np.empty((0,c), int)
     tx1 = np.empty((0,c), int)
     tx2 = np.empty((0,c), int)
     tx3 = np.empty((0,c), int)
+    y0 = np.empty((0,), int)
+    y1 = np.empty((0,), int)
+    y2 = np.empty((0,), int)
+    y3 = np.empty((0,), int)
 
     for i in range(l):
         if(x[i, 22] == 0.0):
             tx0 = np.append(tx0, [x[i,:]], axis=0)
+            y0 = np.append(y0, [y[i]], axis=0)
         elif(x[i, 22] == 1.0):
             tx1 = np.append(tx1, [x[i,:]], axis=0)
+            y1 = np.append(y1, [y[i]], axis=0)
         elif(x[i, 22] == 2.0):
             tx2 = np.append(tx2, [x[i,:]], axis=0)
+            y2 = np.append(y2, [y[i]], axis=0)
         elif(x[i, 22] == 3.0):
             tx3 = np.append(tx3, [x[i,:]], axis=0)
+            y3 = np.append(y3, [y[i]], axis=0)
             
-    return tx0, tx1, tx2, tx3
+    return tx0, y0, tx1, y1, tx2, y2, tx3, y3
     
 
