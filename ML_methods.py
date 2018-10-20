@@ -20,17 +20,6 @@ def create_cross_validation_datasets(N, nb_sets):
 
     return test_indices, train_indices
 
-def transfom_feature_log(x, features):
-    
-    tx = x.copy()
-    
-    for i in features:
-        feature = tx[:,i] + abs(np.min(tx[:,i])) + 0.1 #pour enlever les valeurs négatives
-        logfeature = log(feature)
-        tx[:, i] = logfeature
-    
-    return tx
-
 
 ##################################### -- TRANSFORM NAN values to 0 -- ##################
 
