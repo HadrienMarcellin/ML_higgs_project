@@ -43,6 +43,30 @@ def transform_nan_to_zero(x):
     return tx
 
 
+##################################### -- TRANSFORM NAN values to mean -- ##################
+def transform_to_mean(x):
+    
+    t = x.copy()
+    (l,c) = np.shape(t)
+    mean=np.zeros(c)
+    
+    #calcul moyenne des features
+    for i in range(l):
+        somme = 0;
+        for j in range(c):
+            somme = somme + t[i,j]
+        moyenne = somme/l;
+        mean[j] = moyenne
+
+    #parcourt les nan et les mets à la moyenne de la feature
+    for i in range(l):
+        for j in range(c):
+            if(t[i,j] == np.nan):
+                t[i,j] = mean[j];
+
+    return t
+
+
 ##################################### -- TRANSFORM -999 values to NAN -- ##################
 def transform_to_nan(x, thresh):
     """   
