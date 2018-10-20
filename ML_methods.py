@@ -51,20 +51,25 @@ def transform_to_mean(x):
     mean=np.zeros(c)
     
     #calcul moyenne des features
-    for i in range(l):
+    for i in range(c):
         somme = 0;
-        for j in range(c):
-            somme = somme + t[i,j]
-        moyenne = somme/l;
-        mean[j] = moyenne
+        sum_samples = 0
+        for j in range(l):
+            if(t[j,i] != np.nan):
+                somme = somme + t[j,i]
+                sum_samples = sum_samples + 1
+        
+        moyenne = somme/sum_samples
+        mean[i] = moyenne
 
     #parcourt les nan et les mets à la moyenne de la feature
-    for i in range(l):
-        for j in range(c):
-            if(t[i,j] == np.nan):
-                t[i,j] = mean[j];
+    for i in range(c):
+        for j in range(l):
+            if(t[j,i] == np.nan):
+                t[j,i] = mean[i]
+    
 
-    return t
+    return t, mean
 
 
 ##################################### -- TRANSFORM -999 values to NAN -- ##################
