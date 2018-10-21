@@ -309,7 +309,7 @@ def logistic_regression(features, target, num_steps, learning_rate, add_intercep
         
     weights = np.zeros(features.shape[1])
     
-    for step in xrange(num_steps):
+    for step in range(num_steps):
         scores = np.dot(features, weights)
         predictions = sigmoid(scores)
 
