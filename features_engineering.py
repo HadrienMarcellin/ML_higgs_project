@@ -2,6 +2,45 @@
 """machine learning functions for project 1."""
 import numpy as np
 
+##################################### -- BOSONS AND NAN -- ######################################
+
+def NAN_and_bosons(tx, y, features):
+
+    NAN_boson = np.empty((0,), int)
+    NAN_no = np.empty((0,), int)
+    NAN_nb = np.empty((0,), int)
+    x = tx.copy()
+    (l,c)=np.shape(x)
+    #boucle for qui circule sur les features
+
+    for j in features:
+        nb_bosons = 0
+        nb_no = 0
+        nb_nan = 0
+        #boucle for qui circule sur les samples
+        for i in range(l):
+            if(x[i,j] <= -999):
+                nb_nan = nb_nan + 1
+                #regarde si label = boson
+                if(y[i] == 1):
+                    nb_bosons = nb_bosons + 1
+                elif(y[i] == -1):
+                    nb_no = nb_no + 1
+                
+        NAN_boson = np.append(NAN_boson, [nb_bosons], axis=0)
+        NAN_no = np.append(NAN_no, [nb_no], axis=0)
+        NAN_nb = np.append(NAN_nb, [nb_nan], axis=0) 
+
+    #boucle for qui itère pour connaître le nombre de bosons
+    tot_bosons = 0
+    for b in range(l):
+        if(y[b] == 1):
+            tot_bosons = tot_bosons + 1
+
+    for j in range(len(features)):
+        print("features {x} has {NumberNan} nan values with {NumberBoson} bosons (out of {tot_bos} total bosons) and {NumberNo} others".format(x=features[j], NumberNan=NAN_nb[j], NumberBoson=NAN_boson[j], tot_bos = tot_bosons, NumberNo=NAN_no[j]))
+
+
 
 ##################################### -- LOG -- ######################################
 
@@ -11,6 +50,18 @@ def transform_feature_log(x, features):
         feature = tx[:,i] + abs(np.min(tx[:,i])) + 0.1 #pour enlever les valeurs négatives
         logfeature = np.log(feature)
         tx[:, i] = logfeature
+    
+    return tx
+
+##################################### -- F LOG F-- ######################################
+
+def transform_feature_log_feature(x, features):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i] + abs(np.min(tx[:,i])) + 0.1 #pour enlever les valeurs négatives
+        logfeature = np.log(feature)
+        for l in range(len(tx[:,i])):
+                  tx[l,i] = tx[l,i] * logfeature[l]    
     
     return tx
 
