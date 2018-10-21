@@ -14,7 +14,6 @@ def transform_feature_log(x, features):
     
     return tx
 
-
 #####################################  --  SIN -- ###################################
 
 def transform_feature_sin(x, features):
@@ -23,8 +22,20 @@ def transform_feature_sin(x, features):
         feature = tx[:,i]
         sinfeature = np.sin(feature)
         #add the new feature at the end !
-        c = np.c_[tx, sinfeature]
-        tx = c.copy()
+        #c = np.c_[tx, sinfeature]
+        #tx = c.copy()
+        tx[:, i] = sinfeature
+    
+    return tx
+
+#####################################  --  ARCSIN -- ###################################
+
+def transform_feature_arcsin(x, features):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i]
+        arcsinfeature = np.arcsin(feature)
+        tx[:, i] = arcsinfeature
     
     return tx
 
@@ -36,9 +47,21 @@ def transform_feature_cos(x, features):
         feature = tx[:,i]
         cosfeature = np.cos(feature)
         #add the new feature at the end !
-        c = np.c_[tx, cosfeature]
-        tx = c.copy()
+        #c = np.c_[tx, cosfeature]
+        #tx = c.copy()
+        tx[:, i] = cosfeature
     
+    return tx
+
+#####################################  --  POWER2 -- ###################################
+
+def transform_feature_power(x, features, power):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i]
+        featurepower = np.power(feature, power)
+        tx[:,i] = featurepower
+        
     return tx
 
 #####################################  --  SEPARATE PRI_jet_num -- ###################################
