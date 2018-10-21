@@ -323,3 +323,58 @@ def logistic_regression(features, target, num_steps, learning_rate, add_intercep
             #print log_likelihood(features, target, weights)
         
     return weights
+
+#####################################  --  Optimal weight-vector of the return tuple -- ###################################
+"""
+    Return the optimal weights vector according to the minimal loss. 
+    Useless for actual logistic regression.
+    
+    Parameters
+    ----------
+    This function take the returns items of the regression (vector and tuple)
+    
+    loss_reg : loss vector after regression
+    
+    w_reg : weight tuple after regression
+    
+    
+    Returns
+    -------
+    loss_min == int value
+    w_optimal  == optimal weight vector (1*D)
+    
+"""
+    
+def minimum_loss_vector(loss_reg,w_reg):
+    loss_min=np.min(loss_reg)
+    i=np.where(loss_reg==loss_min)[0] 
+    w_optimal = w_reg[i[0]]
+    return loss_min, w_optimal
+    
+#####################################  --  Accuracy calculator -- ###################################
+"""
+    Return the accuracy of the model according to a labelized test-set.
+    
+    Parameters
+    ----------
+    
+    y_pred = y vector predicted from the regression
+    
+    y_true = actual true vector of y
+    
+    
+    Returns
+    -------
+    The accuracy of the model regarding this set
+"""
+
+def accuracy_calculator(y_pred, y_true):
+    compt=0
+    for i in range(len(y_pred)):
+        if y_pred[i]==y_true[i]:
+            compt=compt+1
+    return compt/len(y_pred)
+    
+    
+
+
