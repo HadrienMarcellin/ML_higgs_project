@@ -145,4 +145,27 @@ def separate_PRI_jet_num(x, y):
             
     return tx0, y0, tx1, y1, tx2, y2, tx3, y3
     
+#####################################  --  new features for PRI_jet_num -- ###################################
 
+def new_feature_PRI_jet_num(x, value):
+    
+    (l, c) = np.shape(x)
+    tx = x.copy()
+    
+    #creat new vectors full of zeros
+    tx0 = np.empty((l,), int)
+    
+    for i in range(l):
+        if(tx[i,22] == value):
+            #tx0 = np.append(tx0, 1, axis=0)
+            tx0[i] = 1
+        else:
+            #tx0 = np.append(tx0, 0, axis=0)
+            tx0[i] = 0
+
+   
+    c = np.c_[tx, tx0]
+    tx = c.copy()     
+    
+    return tx
+    
