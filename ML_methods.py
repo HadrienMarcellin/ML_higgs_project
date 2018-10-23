@@ -94,25 +94,23 @@ def transform_nan_to_zero(x):
 def transform_to_mean(x):
 
     t = x.copy()
-    (l,c) = np.shape(t)
-    mean=np.zeros(c)
     
-    #calcul moyenne des features
-    for i in range(c):
-        somme = 0
-        sum_samples = 0
-        for j in range(l):
-            if(t[j,i] != np.nan):
-                somme = somme + t[j,i]
-                sum_samples = sum_samples + 1
-        
-        moyenne = somme/sum_samples
-        mean[i] = moyenne
-
+    mean = np.nanmean(t, axis = 0)
+    
     for column in t.T:
         column[np.isnan(column)] = np.nanmean(column)
     
     return t, mean
+
+##################################### --  TRANSFORM TEST SET NAN TO PRE-COMPUTED MEAN -- ##################
+def transform_to_precomputed_mean(x, mean):
+
+    t = x.copy()
+       
+    for i, column in enumerate(t.T):
+        column[np.isnan(column)] = mean[i]
+    
+    return t
     
 ##################################### -- TRANSFORM -999 values to NAN -- ##################
 def transform_to_nan(x, thresh):
@@ -199,6 +197,23 @@ def remove_missing_data(tx, thresh, sample_feature):
     tx_cleaned = np.delete(tx_cleaned, rows_to_delete, axis = 0)
     
     return tx_cleaned
+
+
+##################################### -- ADD BOOL WHEN NAN -- #######################
+
+def add_bool_when_nan(tx, feature_ids):
+    
+    x = tx.copy()
+    
+    for id_ in feature_ids:
+        bool_vect = np.zeros(len(x[:, id_]))
+        bool_vect[np.isnan(x[:, id_ ])] = 1
+        x = np.hstack( (x, bool_vect.reshape(len(bool_vect), 1)) )
+    
+    return x
+    
+
+
 
 #####################################  --  MSE -- ###################################
 
@@ -388,7 +403,7 @@ def logistic_regression(features, target, num_steps, learning_rate, add_intercep
 """
     
 def minimum_loss_vector(loss_reg,w_reg):
-    loss_min=np.min(loss_reg)
+    loss_min=np.nanmin(loss_reg)
     i=np.where(loss_reg==loss_min)[0] 
     w_optimal = w_reg[i[0]]
     return loss_min, w_optimal

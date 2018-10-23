@@ -63,8 +63,8 @@ def split_data_according_to_truth(x,y):
 
     """
     thresh = -10000
-    x_true = x[np.where((y>0) & (x > thresh))]
-    x_false = x[np.where((y<0) & (x > thresh))]
+    x_true = x[np.where(np.logical_and(y > 0, x > thresh))]
+    x_false = x[np.where( np.logical_and(y < 0, x > thresh))]
     nb_nan = np.count_nonzero(np.isnan(x))
     
     return x_true, x_false, nb_nan
