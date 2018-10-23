@@ -44,15 +44,62 @@ def transform_nan_to_zero(x):
 
 
 ##################################### -- TRANSFORM NAN values to mean -- ##################
-def transform_to_mean(x):
+#def transform_to_mean(x):
     
+    #t = x.copy()
+    #(l,c) = np.shape(t)
+    #mean=np.zeros(c)
+    
+    ##calcul moyenne des features
+    #for i in range(c):
+        #somme = 0
+        #sum_samples = 0
+        #for j in range(l):
+            #if(t[j,i] != np.nan):
+                #somme = somme + t[j,i]
+                #sum_samples = sum_samples + 1
+        #t = x.copy()
+    #(l,c) = np.shape(t)
+    #mean=np.zeros(c)
+    
+    ##calcul moyenne des features
+    #for i in range(c):
+        #somme = 0
+        #sum_samples = 0
+        #for j in range(l):
+            #if(t[j,i] != np.nan):
+                #somme = somme + t[j,i]
+                #sum_samples = sum_samples + 1
+        
+        #moyenne = somme/sum_samples
+        #mean[i] = moyenne
+
+    ##parcourt les nan et les mets à la moyenne de la feature
+    #for i in range(c):
+        #for j in range(l):
+            #if(t[j,i] == np.nan):
+                #t[j,i] = mean[i]
+        #moyenne = somme/sum_samples
+        #mean[i] = moyenne
+
+    ##parcourt les nan et les mets à la moyenne de la feature
+    #for i in range(c):
+        #for j in range(l):
+            #if(t[j,i] == np.nan):
+                #t[j,i] = mean[i]
+    
+
+    #return t, mean
+
+def transform_to_mean(x):
+
     t = x.copy()
     (l,c) = np.shape(t)
     mean=np.zeros(c)
     
     #calcul moyenne des features
     for i in range(c):
-        somme = 0;
+        somme = 0
         sum_samples = 0
         for j in range(l):
             if(t[j,i] != np.nan):
@@ -62,16 +109,11 @@ def transform_to_mean(x):
         moyenne = somme/sum_samples
         mean[i] = moyenne
 
-    #parcourt les nan et les mets à la moyenne de la feature
-    for i in range(c):
-        for j in range(l):
-            if(t[j,i] == np.nan):
-                t[j,i] = mean[i]
+    for column in t.T:
+        column[np.isnan(column)] = np.nanmean(column)
     
-
     return t, mean
-
-
+    
 ##################################### -- TRANSFORM -999 values to NAN -- ##################
 def transform_to_nan(x, thresh):
     """   
@@ -375,6 +417,23 @@ def accuracy_calculator(y_pred, y_true):
             compt=compt+1
     return compt/len(y_pred)
     
+#####################################  --  SPLIT DATA -- ###################################
     
+def split_data(x, y, ratio, myseed=1):
+    """split the dataset based on the split ratio."""
+    # set seed
+    np.random.seed(myseed)
+    # generate random indices
+    num_row = len(y)
+    indices = np.random.permutation(num_row)
+    index_split = int(np.floor(ratio * num_row))
+    index_tr = indices[: index_split]
+    index_te = indices[index_split:]
+    # create split
+    x_tr = x[index_tr]
+    x_te = x[index_te]
+    y_tr = y[index_tr]
+    y_te = y[index_te]
+    return x_tr, x_te, y_tr, y_te
 
 
