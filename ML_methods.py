@@ -345,13 +345,86 @@ def ridge_regression(y, tx, lamb):
     b = tx.T.dot(y)
     return np.linalg.solve(a, b)
 
-#####################################  --  SIGMOID FUNCTION  -- ###################################
 
-def sigmoid(predictioni):
+
+#####################################  --  Logistic FUNCTION  -- ###################################
+
+def logistic_fun(predictioni):
     return 1 / (1 + np.exp(-predictioni))
 
-#####################################  --  Log_likelihood  -- ###################################
 
+#####################################  --  Calculate logistic cost function  -- ###################################
+
+def logistic_cost(y, X, w):
+    loss_log = 0
+    for i in range(X.shape[0]):
+        loss_log = loss_log + np.log(1+np.exp(X[i,:].T@w)) - y[i,] * X[i,:].T@w
+    return loss_log
+    
+
+#####################################  --  Logistic Gradient -- ###################################
+
+def logistic_gradient(y, X, w):
+    return X.T@(logistic_fun(X@w)-y)
+    
+
+#####################################  --  Logistic Hessian Matrix -- ###################################
+
+def logistic_hessian(X, w):
+    S=np.zeros((X.shape[0],X.shape[0]))
+    for i in range(X.shape[0]):
+        S[i,i]=logistic_fun(X[i,:].T@w)*(1-logistic_fun(X[i,:].T@w))
+    return X.T@S@X
+    
+
+#####################################  --  Logistic GRADIENT DESCENT -- ###################################
+
+def log_gradient_descent(y, tx, initial_w, max_iters, gamma):
+    """Gradient descent algorithm."""
+    # Define parameters to store w and loss
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    for n_iter in range(max_iters):
+        # compute loss, gradient
+        grad = logistic_gradient(y, tx, w)
+        loss = logistic_cost(y, tx, w)
+        # gradient w by descent update
+        w = w - gamma * grad
+        # store w and loss
+        ws.append(w)
+        losses.append(loss)
+        #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
+              #bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+    return losses, ws
+#PROBLEM WITH THE INVERSION OF MATRIX.
+
+#####################################  --  Logistic Newton Method -- ###################################
+
+def log_Newton_method(y, tx, initial_w, max_iters, gamma):
+    """Gradient descent algorithm."""
+    # Define parameters to store w and loss
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    for n_iter in range(max_iters):
+        # compute loss, gradient
+        H=logistic_hessian(tx, w)
+        grad = logistic_gradient(y, tx, w)
+        loss = logistic_cost(y, tx, w)
+        # gradient w by descent update
+        H_inv=np.linalg.inv(H)
+        w = w - gamma * H_inv@grad
+        # store w and loss
+        ws.append(w)
+        losses.append(loss)
+        print("1\n")
+        #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
+              #bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+    return losses, ws
+
+#####################################  --  Log_likelihood  -- ###################################
+"""
 def log_likelihood(features, target, weights):
     scores = np.dot(features, weights)
     ll = np.sum( target*scores - np.log(1 + np.exp(scores)) )
@@ -380,7 +453,7 @@ def logistic_regression(features, target, num_steps, learning_rate, add_intercep
             #print log_likelihood(features, target, weights)
         
     return weights
-
+"""
 #####################################  --  Optimal weight-vector of the return tuple -- ###################################
 """
     Return the optimal weights vector according to the minimal loss. 
