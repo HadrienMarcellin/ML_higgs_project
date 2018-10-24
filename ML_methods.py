@@ -230,7 +230,7 @@ def calculate_mae(e):
 
 def compute_loss(y, tx, w):
     e = y - tx.dot(w)
-    return calculate_mse(e)
+    return calculate_mae(e)
 
 
 #####################################  --  LEAST SQUARES -- ###################################

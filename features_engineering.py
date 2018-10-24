@@ -2,6 +2,8 @@
 """machine learning functions for project 1."""
 import numpy as np
 
+
+
 ##################################### -- BOSONS AND NAN -- ######################################
 
 def NAN_and_bosons(tx, y, features):
@@ -41,13 +43,45 @@ def NAN_and_bosons(tx, y, features):
         print("features {x} has {NumberNan} nan values with {NumberBoson} bosons (out of {tot_bos} total bosons) and {NumberNo} others".format(x=features[j], NumberNan=NAN_nb[j], NumberBoson=NAN_boson[j], tot_bos = tot_bosons, NumberNo=NAN_no[j]))
 
 
+##################################### -- STANDARDIZE ANGLES -- #################################
+
+def standardize_angles(tx, features):
+    
+    x = tx.copy()
+    
+    for i in features:
+        standfeature = x[:,i]
+        standfeature = (standfeature - np.nanmin(standfeature) - np.pi)/ (np.nanmax(standfeature) - np.nanmin(standfeature)) * 2 * np.pi
+        x[:,i] = standfeature
+    
+    return x
+
+##################################### -- STANDARDIZE Features -- #################################
+
+def standardize_features(tx, features):
+    
+    x = tx.copy()
+    mean = []
+    std = []
+    
+    for i in features:
+        
+        standfeature = x[:,i]
+        std.append(np.nanstd(standfeature))
+        mean.append(np.nanmean(standfeature))
+        
+        standfeature = (standfeature - mean[-1])/ std[-1]
+        x[:,i] = standfeature
+    
+    return x, mean, std 
+
 
 ##################################### -- LOG -- ######################################
 
 def transform_feature_log(x, features):
     tx = x.copy()
     for i in features:
-        feature = tx[:,i] + abs(np.min(tx[:,i])) + 0.1 #pour enlever les valeurs négatives
+        feature = tx[:,i] - np.nanmin(tx[:,i]) + 0.1 #pour enlever les valeurs négatives
         logfeature = np.log(feature)
         tx[:, i] = logfeature
     
@@ -79,17 +113,6 @@ def transform_feature_sin(x, features):
     
     return tx
 
-#####################################  --  ARCSIN -- ###################################
-
-def transform_feature_arcsin(x, features):
-    tx = x.copy()
-    for i in features:
-        feature = tx[:,i]
-        arcsinfeature = np.arcsin(feature)
-        tx[:, i] = arcsinfeature
-    
-    return tx
-
 #####################################  --  COS -- ###################################
 
 def transform_feature_cos(x, features):
@@ -103,6 +126,55 @@ def transform_feature_cos(x, features):
         tx[:, i] = cosfeature
     
     return tx
+
+#####################################  --  TAN -- ###################################
+
+def transform_feature_tan(x, features):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i]
+        tanfeature = np.tan(feature)
+        #add the new feature at the end !
+        #c = np.c_[tx, cosfeature]
+        #tx = c.copy()
+        tx[:, i] = tanfeature
+    
+    return tx
+
+#####################################  --  ARCSIN -- ###################################
+
+def transform_feature_arcsin(x, features):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i]
+        arcsinfeature = np.arcsin(feature)
+        tx[:, i] = arcsinfeature
+    
+    return tx
+
+#####################################  --  ARCCOS -- ###################################
+
+def transform_feature_arccos(x, features):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i]
+        arccosfeature = np.arccos(feature)
+        tx[:, i] = arccosfeature
+    
+    return tx
+
+#####################################  --  ARCTAN -- ###################################
+
+def transform_feature_arctan(x, features):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i]
+        arctanfeature = np.arctan(feature)
+        tx[:, i] = arctanfeature
+    
+    return tx
+
+
 
 #####################################  --  POWER2 -- ###################################
 
