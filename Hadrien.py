@@ -4,6 +4,15 @@ from proj1_helpers import *
 import matplotlib.pyplot as plt
 
 
+##################################################################################"
+def change_y_boundaries(y):
+    
+    ym = y.copy()
+    ym[ym < 0] = 0
+    
+    return ym
+
+#################################################################################"""""
 
 def display_feature_distribution(y, x, nb_bins):
     """
@@ -62,7 +71,7 @@ def split_data_according_to_truth(x,y):
         Number of NAN values that has been discarded.
 
     """
-    thresh = -10000
+    thresh = -100
     x_true = x[np.where(np.logical_and(y > 0, x > thresh))]
     x_false = x[np.where( np.logical_and(y < 0, x > thresh))]
     nb_nan = np.count_nonzero(np.isnan(x))
