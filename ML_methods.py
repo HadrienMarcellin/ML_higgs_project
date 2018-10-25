@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """machine learning functions for project 1."""
 import numpy as np
+from Hadrien import *
 
 
 def create_cross_validation_datasets(N, nb_sets):
@@ -378,11 +379,11 @@ def logistic_hessian(X, w):
     
 
 #####################################  --  Logistic GRADIENT DESCENT -- ###################################
-"""!!! Change y boundaries by [0(previously -1), 1] tu use the logistic Regression method.
-Use the function -- change_y_boundaries(y_tr) -- on the vector y_train to do so. """
-
-def log_gradient_descent(y, tx, initial_w, max_iters, gamma):
+def log_gradient_descent(y_, tx, initial_w, max_iters, gamma):
     """Gradient descent algorithm."""
+    
+    y=change_y_boundaries(y_)
+    
     # Define parameters to store w and loss
     ws = []
     losses = []
