@@ -406,6 +406,48 @@ def log_gradient_descent(y_, tx, initial_w, max_iters, gamma):
     return losses, ws
 #PROBLEM WITH THE INVERSION OF MATRIX.
 
+
+#####################################  --  Regularized Logistic Gradient -- ###################################
+
+def re_logistic_gradient(y, X, w,lambd):
+    return X.T@(logistic_fun(X@w)-y) + lambd*np.linalg.norm(w)
+        
+#####################################  --  Regularized logistic cost function  -- ###################################
+
+def re_logistic_cost(y, X, w,lambd):
+    loss_log = 0
+    for i in range(X.shape[0]):
+        loss_log = loss_log + np.logaddexp(0,X[i,:].T@w) - y[i,] * X[i,:].T@w + lambd/2*np.linalg.norm(w)**2
+    return loss_log
+
+
+#####################################  -- Regularized Logistic GRADIENT DESCENT -- ###################################
+
+"""!!! Change y boundaries by [0(previously -1), 1] tu use the logistic Regression method.
+Use the function -- change_y_boundaries(y_tr) -- on the vector y_train to do so. """
+
+def re_log_gradient_descent(y, tx, initial_w, max_iters, gamma, lambd):
+    """Gradient descent algorithm."""
+    # Define parameters to store w and loss
+    ws = []
+    losses = []
+    w = initial_w
+    for n_iter in range(max_iters):
+        # compute loss, gradient
+        # store w and loss
+        ws.append(w)
+        loss = re_logistic_cost(y, tx, w,lambd)
+        losses.append(loss)
+        
+        # gradient w by descent update
+        grad = re_logistic_gradient(y, tx, w,lambd)
+        w = w - gamma * grad
+        #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
+              #bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+    return losses, ws
+#PROBLEM WITH THE INVERSION OF MATRIX.
+
+
 #####################################  --  Logistic Newton Method -- ###################################
 """!!! Change y boundaries by [0(previously -1), 1] tu use the logistic Regression method.
 Use the function -- change_y_boundaries(y_tr) -- on the vector y_train to do so. """
