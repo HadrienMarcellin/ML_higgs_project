@@ -21,6 +21,14 @@ def pearson_correlation(x, y, num_feature):
     
     return pearson_correl
 
+def corr_pear(y, tx, col):
+    mean_y = np.mean(y)
+    mean_x = np.mean(tx[col,:])
+    numerateur = np.dot((tx[:, col] - mean_x),(y - mean_y))
+    denominateur = np.sum((tx[:, col] - mean_x)**2) * np.sum((y - mean_y)**2)
+    return numerateur / np.sqrt(denominateur)
+
+
 def mean(vector):
     somme = 0
     for i in range(len(vector)):
