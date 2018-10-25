@@ -45,3 +45,22 @@ def standardize(x):
     std_x = np.std(x)
     x = x / std_x
     return x 
+
+def corr_pear(y, tx, col):
+    mean_y = np.mean(y)
+    mean_x = np.mean(tx[col,:])
+    numerateur = np.dot((tx[:, col] - mean_x),(y - mean_y))
+    denominateur = np.sum((tx[:, col] - mean_x)**2) * np.sum((y - mean_y)**2)
+    
+    return numerateur / np.sqrt(denominateur)
+
+def compute_corr_features(y, tx, cols):
+    corr = []
+    
+    if cols == 'all':
+        cols = list(range(tx.shape[1]))
+    
+    for col in cols:
+        corr.append(corr_pear(y, tx, col))
+        
+    return corr
