@@ -3,7 +3,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from ML_methods import split_data, gradient_descent, stochastic_gradient_descent, minimum_loss_vector, compute_loss, ridge_regression
+from Hadrien import *
+from ML_methods import *
 
 
 
@@ -81,27 +82,63 @@ def ridge_regression_exploration(y, tx, ratio, lambdas):
        
     
     
+#####################################################################################################"
+
+
+def logistic_stochastic_gradient_descent_exploration(y, tx, ratio, gammas, batch, initial_w, max_iters):
+    
+    y = change_y_boundaries(y)
+
+    x_tr, x_te, y_tr, y_te = split_data(tx, y, ratio, myseed=1)
     
     
+    losses_tr = []
+    losses_te = []
+    
+    for gamma in gammas:
+        
+        losses_iter, ws_iter = log_stochastic_gradient_descent(y_tr, x_tr, initial_w, batch, max_iters, gamma)
+        min_loss, min_ws = minimum_loss_vector(losses_iter, ws_iter)
+        
+        losses_tr.append(min_loss)
+        losses_te.append(logistic_cost(y_te, x_te, min_ws))
+     
+    train_test_errors_visualization(gammas, losses_tr, losses_te, 'LOG GD')
+    
+    min_loss, min_gamma = minimum_loss_vector(losses_te, gammas)
+    
+    print("Gradient Descent, Loss : {0}, Lambda : {1}".format(round(min_loss, 3), min_gamma))
+    
+def logistic_gradient_descent_exploration(y, tx, ratio, gammas, initial_w, max_iters):
+    
+    y = change_y_boundaries(y)
+
+    x_tr, x_te, y_tr, y_te = split_data(tx, y, ratio, myseed=1)
     
     
+    losses_tr = []
+    losses_te = []
+    
+    for gamma in gammas:
+        
+        losses_iter, ws_iter = log_gradient_descent(y_tr, x_tr, initial_w, max_iters, gamma)
+        min_loss, min_ws = minimum_loss_vector(losses_iter, ws_iter)
+        
+        losses_tr.append(min_loss)
+        losses_te.append(logistic_cost(y_te, x_te, min_ws))
+     
+    train_test_errors_visualization(gammas, losses_tr, losses_te, 'LOG GD')
+    
+    min_loss, min_gamma = minimum_loss_vector(losses_te, gammas)
+    
+    print("Gradient Descent, Loss : {0}, Lambda : {1}".format(round(min_loss, 3), min_gamma))
     
     
+
     
+
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 ################################ DISPLAY TEST & TRAIN ERROR ######################################
         
 def train_test_errors_visualization(lambds, mse_tr, mse_te, method):

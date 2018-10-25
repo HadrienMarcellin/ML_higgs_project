@@ -360,7 +360,7 @@ def logistic_cost(y, X, w):
     loss_log = 0
     for i in range(X.shape[0]):
         loss_log = loss_log + np.log(1+np.exp(X[i,:].T@w)) - y[i,] * X[i,:].T@w
-    return loss_log
+    return loss_log/X.shape[0]
     
 
 #####################################  --  Logistic Gradient -- ###################################
@@ -406,6 +406,38 @@ def log_gradient_descent(y_, tx, initial_w, max_iters, gamma):
     return losses, ws
 #PROBLEM WITH THE INVERSION OF MATRIX.
 
+#####################################  --  Logistic STOCHASTIC GRADIENT DESCENT -- ###################################
+def log_stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
+    """Stochastic gradient descent."""
+    # Define parameters to store w and loss
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    
+    compute_loss_freq = round(max_iters/5)
+    
+    
+    for n_iter in range(max_iters):
+        for y_batch, tx_batch in batch_iter(y, tx, batch_size=batch_size, num_batches=1):
+            # compute a stochastic gradient and loss
+            grad = logistic_gradient(y_batch, tx_batch, w)
+            
+            if n_iter%compute_loss_freq == 0:
+                # calculate loss
+                loss = logistic_cost(y, tx, w)
+                losses.append(loss)
+                print("SGD({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
+                      bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+            else:
+                losses.append(losses[-1])
+
+            # update w through the stochastic gradient update
+            w = w - gamma * grad
+            # store w and loss
+            ws.append(w)
+        
+    return losses, ws
+    
 
 #####################################  --  Regularized Logistic Gradient -- ###################################
 
