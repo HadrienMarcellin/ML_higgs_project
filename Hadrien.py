@@ -12,6 +12,13 @@ def change_y_boundaries(y):
     
     return ym
 
+##################################################################################"
+def rechange_y_boundaries(y):
+    
+    ym = y.copy()
+    ym[ym < 0.5] = -1
+    
+    return ym
 #################################################################################"""""
 
 def display_feature_distribution(y, x, nb_bins):

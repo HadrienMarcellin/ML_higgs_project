@@ -378,28 +378,36 @@ def logistic_hessian(X, w):
     
 
 #####################################  --  Logistic GRADIENT DESCENT -- ###################################
+"""!!! Change y boundaries by [0(previously -1), 1] tu use the logistic Regression method.
+Use the function -- change_y_boundaries(y_tr) -- on the vector y_train to do so. """
 
 def log_gradient_descent(y, tx, initial_w, max_iters, gamma):
     """Gradient descent algorithm."""
     # Define parameters to store w and loss
-    ws = [initial_w]
+    ws = []
     losses = []
     w = initial_w
     for n_iter in range(max_iters):
-        # compute loss, gradient
-        grad = logistic_gradient(y, tx, w)
-        loss = logistic_cost(y, tx, w)
-        # gradient w by descent update
-        w = w - gamma * grad
+        
         # store w and loss
         ws.append(w)
+        
+        loss = logistic_cost(y, tx, w)
+        
         losses.append(loss)
+        
+        # gradient w by descent update
+        grad = logistic_gradient(y, tx, w)
+        
+        w = w - gamma * grad
         #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
               #bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
     return losses, ws
 #PROBLEM WITH THE INVERSION OF MATRIX.
 
 #####################################  --  Logistic Newton Method -- ###################################
+"""!!! Change y boundaries by [0(previously -1), 1] tu use the logistic Regression method.
+Use the function -- change_y_boundaries(y_tr) -- on the vector y_train to do so. """
 
 def log_Newton_method(y, tx, initial_w, max_iters, gamma):
     """Gradient descent algorithm."""
@@ -408,17 +416,24 @@ def log_Newton_method(y, tx, initial_w, max_iters, gamma):
     losses = []
     w = initial_w
     for n_iter in range(max_iters):
-        # compute loss, gradient
-        H=logistic_hessian(tx, w)
-        grad = logistic_gradient(y, tx, w)
-        loss = logistic_cost(y, tx, w)
-        # gradient w by descent update
-        H_inv=np.linalg.inv(H)
-        w = w - gamma * H_inv@grad
+        
         # store w and loss
         ws.append(w)
+        
+        loss = logistic_cost(y, tx, w)
+        
         losses.append(loss)
-        print("1\n")
+        
+        # gradient w by descent update
+        grad = logistic_gradient(y, tx, w)
+        
+        H=logistic_hessian(tx, w)
+        
+        H_inv=np.linalg.inv(H)
+        
+        w = w - gamma * H_inv@grad
+        
+       
         #print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
               #bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
     return losses, ws
