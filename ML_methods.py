@@ -286,10 +286,10 @@ def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
         for y_batch, tx_batch in batch_iter(y, tx, batch_size=batch_size, num_batches=1):
             # compute a stochastic gradient and loss
             grad, _ = compute_gradient(y_batch, tx_batch, w)
-            # update w through the stochastic gradient update
-            w = w - gamma * grad
             # calculate loss
             loss = compute_loss(y, tx, w)
+            # update w through the stochastic gradient update
+            w = w - gamma * grad
             # store w and loss
             ws.append(w)
             losses.append(loss)

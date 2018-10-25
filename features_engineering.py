@@ -58,9 +58,23 @@ def standardize_angles(tx, features):
 
 ##################################### -- STANDARDIZE Features -- #################################
 
-def standardize_features(tx, features):
+def standardize_features_according_to_train_set(tx, features, mean, std):
     
     x = tx.copy()
+
+    for i, feature in enumerate(features):
+        
+        standfeature = x[:,feature]
+        standfeature = (standfeature - mean[i])/ std[i]
+        x[:,feature] = standfeature
+    
+    return x
+
+
+##################################### -- STANDARDIZE Features -- #################################
+
+def standardize_features(tx, features):
+    
     mean = []
     std = []
     
