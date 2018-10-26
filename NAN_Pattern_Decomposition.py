@@ -30,17 +30,17 @@ def decompose_dataset_according_to_NAN_pattern(tx, y, pcols = [0, 23, 28]):
     #delete useless columns for each group regarding NaN values:
     # !!! need to decrement the index of our table for each new iteration 
     
-    p1=np.delete(p1,0,1)
+    #p1=np.delete(p1,0,1)
     
-    p2=np.delete(p2,5,1)
-    p2=np.delete(p2,5,1)
-    p2=np.delete(p2,10,1)
-    p2=np.delete(p2,23,1)
-    p2=np.delete(p2,23,1)
-    p2=np.delete(p2,23,1)
+    #p2=np.delete(p2,5,1)
+    #p2=np.delete(p2,5,1)
+    #p2=np.delete(p2,10,1)
+    #p2=np.delete(p2,23,1)
+    #p2=np.delete(p2,23,1)
+    #p2=np.delete(p2,23,1)
     
-    p3=np.delete(p3,23,1)
-    p3=np.delete(p3,23,1)
-    p3=np.delete(p3,23,1)
+    #p3=np.delete(p3,23,1)
+    #p3=np.delete(p3,23,1)
+    #p3=np.delete(p3,23,1)
     
     return p0, y0, p1, y1, p2, y2, p3, y3 
