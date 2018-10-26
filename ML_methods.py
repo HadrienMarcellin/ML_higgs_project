@@ -412,6 +412,8 @@ def log_gradient_descent(y_, tx, initial_w, max_iters, gamma):
 def log_stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
     """Stochastic gradient descent."""
     # Define parameters to store w and loss
+    y=change_y_boundaries(y_)
+    
     ws = [initial_w]
     losses = []
     w = initial_w
