@@ -348,6 +348,14 @@ def ridge_regression(y, tx, lamb):
 
 
 
+
+
+
+
+
+
+
+
 #####################################  --  Logistic FUNCTION  -- ###################################
 
 def logistic_fun(predictioni):
@@ -366,16 +374,9 @@ def logistic_cost(y, X, w):
 #####################################  --  Logistic Gradient -- ###################################
 
 def logistic_gradient(y, X, w):
-    return X.T@(logistic_fun(X@w)-y)
+    return X.T@(logistic_fun(X@w)-y)/X.shape[0]
     
 
-#####################################  --  Logistic Hessian Matrix -- ###################################
-
-def logistic_hessian(X, w):
-    S=np.zeros((X.shape[0],X.shape[0]))
-    for i in range(X.shape[0]):
-        S[i,i]=logistic_fun(X[i,:].T@w)*(1-logistic_fun(X[i,:].T@w))
-    return X.T@S@X
     
 
 #####################################  --  Logistic GRADIENT DESCENT -- ###################################
@@ -406,6 +407,7 @@ def log_gradient_descent(y_, tx, initial_w, max_iters, gamma):
     return losses, ws
 #PROBLEM WITH THE INVERSION OF MATRIX.
 
+
 #####################################  --  Logistic STOCHASTIC GRADIENT DESCENT -- ###################################
 def log_stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
     """Stochastic gradient descent."""
@@ -422,7 +424,7 @@ def log_stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gam
             # compute a stochastic gradient and loss
             grad = logistic_gradient(y_batch, tx_batch, w)
             
-            if n_iter%compute_loss_freq == 0:
+            if n_iter%compute_loss_freq == 0 or n_iter==max_iters-1:
                 # calculate loss
                 loss = logistic_cost(y, tx, w)
                 losses.append(loss)
@@ -439,10 +441,15 @@ def log_stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gam
     return losses, ws
     
 
+    
+    
+    
+    
+    
 #####################################  --  Regularized Logistic Gradient -- ###################################
 
 def re_logistic_gradient(y, X, w,lambd):
-    return X.T@(logistic_fun(X@w)-y) + lambd*np.linalg.norm(w)
+    return X.T@(logistic_fun(X@w)-y) + lambd*np.linalg.norm(w)/X.shape[0]
         
 #####################################  --  Regularized logistic cost function  -- ###################################
 
@@ -450,16 +457,15 @@ def re_logistic_cost(y, X, w,lambd):
     loss_log = 0
     for i in range(X.shape[0]):
         loss_log = loss_log + np.logaddexp(0,X[i,:].T@w) - y[i,] * X[i,:].T@w + lambd/2*np.linalg.norm(w)**2
-    return loss_log
+    return loss_log/X.shape[0]
 
 
 #####################################  -- Regularized Logistic GRADIENT DESCENT -- ###################################
 
-"""!!! Change y boundaries by [0(previously -1), 1] tu use the logistic Regression method.
-Use the function -- change_y_boundaries(y_tr) -- on the vector y_train to do so. """
 
-def re_log_gradient_descent(y, tx, initial_w, max_iters, gamma, lambd):
+def re_log_gradient_descent(y_, tx, initial_w, max_iters, gamma, lambd):
     """Gradient descent algorithm."""
+    y=change_y_boundaries(y_)
     # Define parameters to store w and loss
     ws = []
     losses = []
@@ -479,6 +485,19 @@ def re_log_gradient_descent(y, tx, initial_w, max_iters, gamma, lambd):
     return losses, ws
 #PROBLEM WITH THE INVERSION OF MATRIX.
 
+
+
+
+
+
+
+#####################################  --  Logistic Hessian Matrix -- ###################################
+
+def logistic_hessian(X, w):
+    S=np.zeros((X.shape[0],X.shape[0]))
+    for i in range(X.shape[0]):
+        S[i,i]=logistic_fun(X[i,:].T@w)*(1-logistic_fun(X[i,:].T@w))
+    return X.T@S@X
 
 #####################################  --  Logistic Newton Method -- ###################################
 """!!! Change y boundaries by [0(previously -1), 1] tu use the logistic Regression method.
