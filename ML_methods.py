@@ -171,10 +171,10 @@ def standardize_with_nan(x):
         N x D matrix, with same size as input with normalized features.
     """
     tx = x.copy()
-    mean_x = np.nanmean(x, axis = 0)
-    tx = tx - mean_x
-    std_x = np.nanstd(x, axis = 0)
-    tx = tx / std_x
+    mean_x = np.nanmean(x, axis = 1)
+    tx = tx - mean_x.reshape(-1,1)
+    std_x = np.nanstd(x, axis = 1)
+    tx = tx / std_x.reshape(-1,1)
     
     return tx, mean_x, std_x
 
@@ -615,3 +615,93 @@ def split_data(x, y, ratio, myseed=1):
     return x_tr, x_te, y_tr, y_te
 
 
+#####################################  --  PREDICTION -- ###################################
+
+def prediction(x, y, split, max_iters, gamma, type_func):
+    #split data
+    x_tr,x_te,y_tr,y_te=split_data(x,y,split)
+
+    if(type_func == 'gd'):
+        initial_w_gd = np.zeros(x.shape[1])
+        losses, ws = gradient_descent(y_tr, x_tr, initial_w_gd, max_iters, gamma)
+    elif(type_func == 'sgd'):
+        initial_w_sgd = np.zeros(x.shape[1])
+        losses, ws = stochastic_gradient_descent(y_tr, x_tr, initial_w_sgd, 10, max_iters, gamma)
+    elif(type_func == 'ls'):
+        ws = least_squares(y, x)
+        losses = compute_loss(y, x, ws)
+    elif(type_func == 'ridge'):
+        #lambdas = np.logspace(-100, 100, 200)
+        #losses = []
+        #for index, lambda_ in enumerate(lambdas):
+            #ws = ridge_regression(y, x, lambda_)
+            #losses.append(compute_loss(y, x, ws))
+        lambdas = np.logspace(-100, 100, 200)
+        losses = []
+        ws = []
+        for index, lambda_ in enumerate(lambdas):
+            ws.append(ridge_regression(y, x, lambda_))
+            losses.append(compute_loss(y, x, ws[index]))
+       
+    #losses
+    l,wnew=minimum_loss_vector(losses, ws)
+
+    #predictions
+    y_pred=predict_labels(wnew, x_tr)
+
+    #accuracy
+    print(accuracy_calculator(y_pred, y_tr))
+    
+    
+#####################################  --  PREDICTION RIDGE -- ###################################
+
+def prediction_ridge(x, y, split, max_iters, gamma):
+    
+    tx = x.copy()
+    
+    x_tr, x_te, y_tr, y_te = split_data(tx, y, split, myseed=1)
+    
+    lambdas = np.logspace(-100, 100, 200)
+    losses = []
+    ws = []
+    for index, lambda_ in enumerate(lambdas):
+        ws.append(ridge_regression(y, x, lambda_))
+        losses.append(compute_loss(y, x, ws[index]))
+        
+    #losses
+    l,wnew=minimum_loss_vector(losses, ws)
+
+    #predictions
+    y_pred=predict_labels(wnew, x_tr)
+
+    #accuracy
+    print(accuracy_calculator(y_pred, y_tr))
+    
+    return ws
+
+#####################################  --  PREDICTION RIDGE LAMBDA FIXED-- ###################################
+
+
+def prediction_ridge_lambda_fixed(x, y, split, max_iters, lambda_):
+    
+    tx = x.copy()
+    
+    x_tr, x_te, y_tr, y_te = split_data(tx, y, split, myseed=1)
+    
+    #lambdas = np.logspace(-100, 100, 200)
+    losses = []
+    ws = []
+    #for index, lambda_ in enumerate(lambdas):
+    ws=ridge_regression(y, x, lambda_)
+    losses=append(compute_loss(y, x, ws[index])
+        
+    #losses
+    #l,wnew=minimum_loss_vector(losses, ws)
+
+    #predictions
+    y_pred = predict_labels(ws, x_tr)
+
+    #accuracy
+    print(accuracy_calculator(y_pred, y_tr))
+    
+    return ws

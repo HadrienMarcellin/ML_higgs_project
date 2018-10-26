@@ -78,7 +78,7 @@ def ridge_regression_exploration(y, tx, ratio, lambdas):
     
     print("Ridge Resgression, Loss : {0}, Lambda : {1}".format(round(min_loss, 3), min_lambda))
     
-    
+    return ws
        
     
     
