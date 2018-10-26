@@ -77,6 +77,8 @@ def standardize_features(tx, features):
     
     mean = []
     std = []
+    x = tx.copy()
+
     
     for i in features:
         
@@ -97,10 +99,7 @@ def transform_feature_log(x, features):
     for i in features:
         feature = tx[:,i] - np.nanmin(tx[:,i]) + 0.1 #pour enlever les valeurs négatives
         logfeature = np.log(feature)
-        #tx[:, i] = logfeature
-        #add the new feature at the end !
-        c = np.c_[tx, logfeature]
-        tx = c.copy()
+        tx[:, i] = logfeature
     
     return tx
 
@@ -124,9 +123,9 @@ def transform_feature_sin(x, features):
         feature = tx[:,i]
         sinfeature = np.sin(feature)
         #add the new feature at the end !
-        c = np.c_[tx, sinfeature]
-        tx = c.copy()
-        #tx[:, i] = sinfeature
+        #c = np.c_[tx, sinfeature]
+        #tx = c.copy()
+        tx[:, i] = sinfeature
     
     return tx
 
@@ -138,9 +137,9 @@ def transform_feature_cos(x, features):
         feature = tx[:,i]
         cosfeature = np.cos(feature)
         #add the new feature at the end !
-        c = np.c_[tx, cosfeature]
-        tx = c.copy()
-        #tx[:, i] = cosfeature
+        #c = np.c_[tx, cosfeature]
+        #tx = c.copy()
+        tx[:, i] = cosfeature
     
     return tx
 
@@ -200,26 +199,9 @@ def transform_feature_power(x, features, power):
     for i in features:
         feature = tx[:,i]
         featurepower = np.power(feature, power)
-        #tx[:,i] = featurepower
-        c = np.c_[tx, featurepower]
-        tx = c.copy()
+        tx[:,i] = featurepower
         
     return tx
-
-#####################################  --  SQRT -- ###################################
-
-def transform_feature_sqrt(x, features):
-    tx = x.copy()
-    for i in features:
-        feature = tx[:,i]
-        featuresqrt = np.sqrt(np.abs(feature))
-        #tx[:,i] = featurepower
-        c = np.c_[tx, featuresqrt]
-        tx = c.copy()
-        
-    return tx
-
-
 
 #####################################  --  SEPARATE PRI_jet_num -- ###################################
 
@@ -251,14 +233,14 @@ def separate_PRI_jet_num(x, y):
             
     return tx0, y0, tx1, y1, tx2, y2, tx3, y3
     
-#####################################  --  NEW PRI_jet_num -- ###################################
+#####################################  --  new features for PRI_jet_num -- ###################################
 
 def new_feature_PRI_jet_num(x, value):
     
     (l, c) = np.shape(x)
     tx = x.copy()
     
-    #create new vectors full of zeros
+    #creat new vectors full of zeros
     tx0 = np.empty((l,), int)
     
     for i in range(l):
@@ -274,23 +256,4 @@ def new_feature_PRI_jet_num(x, value):
     tx = c.copy()     
     
     return tx
-
-#####################################  --  SEPARATE NAN PATTERNS -- ###################################
-
-def separate_nan_patterns(x, features):
-    
-    (l,c)=np.shape(x)
-    tx0 = np.zeros(l,)
-    vect = np.zeros(l,)
-    
-    for i, feature in enumerate(features):
-        if(i == 0):
-            tx0 = x[:, feature]
-        else:
-            vect = x[:, feature]
-            c = np.c_[tx0, vect] 
-            tx0 = c.copy()
-            
-    return tx0
-    
     

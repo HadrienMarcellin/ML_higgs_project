@@ -60,46 +60,49 @@ def stochastic_gradient_descent_exploration(y, tx, ratio, gammas, initial_w, bat
 
 def ridge_regression_exploration(y, tx, ratio, lambdas):
     
-    x_cross, x_val, y_cross, y_val = split_data(tx, y, ratio, myseed=1)
-    
     losses_tr = []
     losses_te = []
-    losses_val
-    
-    ind_te, ind_tr = create_cross_validation_datasets(len(y_cross), 4)
+    losses_val = []
     
     for lambda_ in lambdas:
         
+        x_cross, x_val, y_cross, y_val = split_data(tx, y, ratio, myseed=1)
+                                                    
+        ind_te, ind_tr = create_cross_validation_datasets(len(y_cross), 4)
+                                                    
         ws = []
+        loss_tr = []
+        loss_te = []
         
         for val in list(range(ind_te.shape[1])):
             
-            y_tr = y_cross[ind_tr]
-            y_te = y_cross[ind_te]
+            y_tr = y_cross[ind_tr[:,val]]
+            y_te = y_cross[ind_te[:,val]]
             
-            x_tr = x_cross[ind_tr]
-            x_te = x_cross[ind_te]
+            x_tr = x_cross[ind_tr[:,val], :]
+            x_te = x_cross[ind_te[:,val], :]
             
-            x_tr = standardize(x_tr)
-            x_te = standardize(x_te)
+            #x_tr, _, _ = standardize_with_nan(x_tr)
+            #x_te, _, _ = standardize_with_nan(x_te)
             
             ws.append(ridge_regression(y_tr, x_tr, lambda_))
+            
+            loss_tr.append(compute_loss(y_tr, x_tr, ws[-1]))
+            loss_te.append(compute_loss(y_te, x_te, ws[-1]))
         
-        ws_cross = np.mean(ws)
+        ws_cross = np.mean(ws, axis = 0)
         
-        loss_tr = compute_loss(y_tr, x_tr, ws)
-        loss_te = compute_loss(y_te, x_te, ws)
-        
-        losses_tr.append(loss_tr)
-        losses_te.append(loss_te)
-     
-    train_test_errors_visualization(lambdas, losses_tr, losses_te, 'ridge')
+        losses_tr.append(np.mean(loss_tr))
+        losses_te.append(np.mean(loss_te))
+        losses_val.append(compute_loss(y_val, x_val, ws_cross))
+         
+    train_test_valid_errors_visualization(lambdas, losses_tr, losses_te, losses_val, 'ridge')
     
-    min_loss, min_lambda = minimum_loss_vector(losses_te, lambdas)
+    min_loss, min_lambda = minimum_loss_vector(losses_val, lambdas)
     
     print("Ridge Resgression, Loss : {0}, Lambda : {1}".format(round(min_loss, 3), min_lambda))
     
-    return ws
+    
        
     
     
@@ -175,3 +178,18 @@ def train_test_errors_visualization(lambds, mse_tr, mse_te, method):
     plt.savefig("test_train_errors with {0}".format(method))
     
     
+################################ DISPLAY TEST & TRAIN ERROR ######################################
+        
+def train_test_valid_errors_visualization(lambds, mse_tr, mse_te, mse_val, method):
+    """visualization the curves of mse_tr and mse_te."""
+    plt.figure(figsize=(10,5))
+    plt.semilogx(lambds, mse_tr, marker=".", color='b', label='train error')
+    plt.semilogx(lambds, mse_te, marker=".", color='r', label='test error')
+    plt.semilogx(lambds, mse_val, marker=".", color='g', label='validation error')
+
+    plt.xlabel("Hyper-parameter")
+    plt.ylabel("rmse")
+    plt.title("Evolution of errors with {0}".format(method))
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.savefig("test_train_errors with {0}".format(method))
