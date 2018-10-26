@@ -55,16 +55,37 @@ def stochastic_gradient_descent_exploration(y, tx, ratio, gammas, initial_w, bat
     print("Stochastic Gradient Descent, Loss : {0}, Lambda : {1}".format(round(min_loss, 3), min_gamma))
     
 
+
+################################### RIDGE REGRESSION Exploration #############################
+
 def ridge_regression_exploration(y, tx, ratio, lambdas):
     
-    x_tr, x_te, y_tr, y_te = split_data(tx, y, ratio, myseed=1)
+    x_cross, x_val, y_cross, y_val = split_data(tx, y, ratio, myseed=1)
     
     losses_tr = []
     losses_te = []
+    losses_val
+    
+    ind_te, ind_tr = create_cross_validation_datasets(len(y_cross), 4)
     
     for lambda_ in lambdas:
         
-        ws = ridge_regression(y_tr, x_tr, lambda_)
+        ws = []
+        
+        for val in list(range(ind_te.shape[1])):
+            
+            y_tr = y_cross[ind_tr]
+            y_te = y_cross[ind_te]
+            
+            x_tr = x_cross[ind_tr]
+            x_te = x_cross[ind_te]
+            
+            x_tr = standardize(x_tr)
+            x_te = standardize(x_te)
+            
+            ws.append(ridge_regression(y_tr, x_tr, lambda_))
+        
+        ws_cross = np.mean(ws)
         
         loss_tr = compute_loss(y_tr, x_tr, ws)
         loss_te = compute_loss(y_te, x_te, ws)

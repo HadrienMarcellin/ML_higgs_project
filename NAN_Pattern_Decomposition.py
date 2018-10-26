@@ -43,4 +43,4 @@ def decompose_dataset_according_to_NAN_pattern(tx, y, pcols = [0, 23, 28]):
     #p3=np.delete(p3,23,1)
     #p3=np.delete(p3,23,1)
     
-    return p0, y0, p1, y1, p2, y2, p3, y3 
+    return p0_ind, p0, y0, p1_ind, p1, y1, p2_ind, p2, y2, p3_ind, p3, y3
