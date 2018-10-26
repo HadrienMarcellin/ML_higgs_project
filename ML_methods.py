@@ -7,7 +7,7 @@ from Hadrien import *
 def create_cross_validation_datasets(N, nb_sets):
     
     test_percentage = 1/nb_sets
-    test_length = int(round(N*test_percentage))
+    test_length = int(round(N*test_percentage)) -1
     train_length = int(N-test_length)
     
     random_indices = np.random.permutation(N)
@@ -19,8 +19,7 @@ def create_cross_validation_datasets(N, nb_sets):
         train_indices[:,i] = np.delete(random_indices, list(range(i * test_length, (i + 1) * test_length)))
         test_indices[:,i] = random_indices[i * test_length : (i+1)*test_length]
 
-    return test_indices, train_indices
-
+    return np.int0(test_indices), np.int0(train_indices)
 
 ##################################### -- TRANSFORM NAN values to 0 -- ##################
 
