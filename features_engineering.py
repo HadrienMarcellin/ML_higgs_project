@@ -91,7 +91,6 @@ def standardize_features(tx, features):
     
     return x, mean, std 
 
-
 ##################################### -- LOG -- ######################################
 
 def transform_feature_log(x, features):
@@ -99,7 +98,21 @@ def transform_feature_log(x, features):
     for i in features:
         feature = tx[:,i] - np.nanmin(tx[:,i]) + 0.1 #pour enlever les valeurs négatives
         logfeature = np.log(feature)
-        tx[:, i] = logfeature
+        c = np.c_[tx, logfeature]
+        tx = c.copy()
+        #tx[:, i] = logfeature
+    
+    return tx
+
+##################################### -- sqrt -- ######################################
+def transform_feature_sqrt(x, features):
+    tx = x.copy()
+    for i in features:
+        feature = tx[:,i] - np.nanmin(tx[:,i]) + 0.1 #pour enlever les valeurs négatives
+        sqrtfeature = np.sqrt(feature)
+        c = np.c_[tx, sqrtfeature]
+        tx = c.copy()
+        #tx[:, i] = logfeature
     
     return tx
 
@@ -123,9 +136,9 @@ def transform_feature_sin(x, features):
         feature = tx[:,i]
         sinfeature = np.sin(feature)
         #add the new feature at the end !
-        #c = np.c_[tx, sinfeature]
-        #tx = c.copy()
-        tx[:, i] = sinfeature
+        c = np.c_[tx, sinfeature]
+        tx = c.copy()
+        #tx[:, i] = sinfeature
     
     return tx
 
@@ -137,9 +150,9 @@ def transform_feature_cos(x, features):
         feature = tx[:,i]
         cosfeature = np.cos(feature)
         #add the new feature at the end !
-        #c = np.c_[tx, cosfeature]
-        #tx = c.copy()
-        tx[:, i] = cosfeature
+        c = np.c_[tx, cosfeature]
+        tx = c.copy()
+        #tx[:, i] = cosfeature
     
     return tx
 
@@ -191,7 +204,6 @@ def transform_feature_arctan(x, features):
     return tx
 
 
-
 #####################################  --  POWER2 -- ###################################
 
 def transform_feature_power(x, features, power):
@@ -199,10 +211,11 @@ def transform_feature_power(x, features, power):
     for i in features:
         feature = tx[:,i]
         featurepower = np.power(feature, power)
-        tx[:,i] = featurepower
+        c = np.c_[tx, featurepower]
+        tx = c.copy()
+        #tx[:,i] = featurepower
         
     return tx
-
 #####################################  --  SEPARATE PRI_jet_num -- ###################################
 
 def separate_PRI_jet_num(x, y):

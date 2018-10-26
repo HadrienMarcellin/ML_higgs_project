@@ -713,7 +713,7 @@ def prediction_ridge_lambda_fixed(x, y, split, max_iters, lambda_):
     ws = []
     #for index, lambda_ in enumerate(lambdas):
     ws=ridge_regression(y, x, lambda_)
-    losses=append(compute_loss(y, x, ws[index])
+    losses=compute_loss(y, x, ws)
         
     #losses
     #l,wnew=minimum_loss_vector(losses, ws)

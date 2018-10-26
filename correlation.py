@@ -38,7 +38,7 @@ def mean(vector):
     return mean
 
     
-def standardize(x):
+def standardize_(x):
     """Standardize the original data set."""
     mean_x = mean(x)
     x = x - mean_x
