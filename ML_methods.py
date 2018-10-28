@@ -44,7 +44,7 @@ def transform_nan_to_zero(x):
 
 
 ##################################### -- TRANSFORM NAN values to mean -- ##################
-#def transform_to_mean(x):
+#def transform_to_(x):
     
     #t = x.copy()
     #(l,c) = np.shape(t)
@@ -145,9 +145,9 @@ def log(feature):
 
 def standardize(x):
     """Standardize the original data set."""
-    mean_x = np.mean(x, axis = 1)
-    x = x - mean_x
-    std_x = np.std(x, axis = 1)
+    mean_x = np.mean(x, axis = 0)
+    x = mean_x -x
+    std_x = np.std(x, axis = 0)
     x = x / std_x
     return x, mean_x, std_x
         
@@ -411,7 +411,8 @@ def log_gradient_descent(y_, tx, initial_w, max_iters, gamma):
 def log_stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
     """Stochastic gradient descent."""
     # Define parameters to store w and loss
-    y=change_y_boundaries(y_)
+    
+    y=change_y_boundaries(y)
     
     ws = [initial_w]
     losses = []

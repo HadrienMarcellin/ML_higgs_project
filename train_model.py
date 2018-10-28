@@ -185,7 +185,7 @@ def train_test_valid_errors_visualization(lambds, mse_tr, mse_te, mse_val, metho
     plt.figure(figsize=(10,5))
     plt.semilogx(lambds, mse_tr, marker=".", color='b', label='train error')
     plt.semilogx(lambds, mse_te, marker=".", color='r', label='test error')
-    plt.semilogx(lambds, mse_val, marker=".", color='g', label='validation error')
+    #plt.semilogx(lambds, mse_val, marker=".", color='g', label='validation error')
 
     plt.xlabel("Hyper-parameter")
     plt.ylabel("rmse")

@@ -95,26 +95,39 @@ def standardize_features(tx, features):
 
 def transform_feature_log(x, features):
     tx = x.copy()
+    
+    features_min = []
+    
     for i in features:
-        feature = tx[:,i] - np.nanmin(tx[:,i]) + 0.1 #pour enlever les valeurs négatives
+        
+        f_min = np.nanmin(tx[:,i])
+        feature = tx[:,i] - f_min + 0.1 #pour enlever les valeurs négatives
         logfeature = np.log(feature)
         c = np.c_[tx, logfeature]
         tx = c.copy()
+        features_min.append(f_min)
+
         #tx[:, i] = logfeature
     
-    return tx
+    return tx, features_min
 
 ##################################### -- sqrt -- ######################################
 def transform_feature_sqrt(x, features):
     tx = x.copy()
+    
+    features_min = []
+    
     for i in features:
-        feature = tx[:,i] - np.nanmin(tx[:,i]) + 0.1 #pour enlever les valeurs négatives
+        
+        f_min = np.nanmin(tx[:,i])
+        feature = tx[:,i] - f_min + 0.1 #pour enlever les valeurs négatives
         sqrtfeature = np.sqrt(feature)
         c = np.c_[tx, sqrtfeature]
         tx = c.copy()
+        features_min.append(f_min)
         #tx[:, i] = logfeature
     
-    return tx
+    return tx, features_min
 
 ##################################### -- F LOG F-- ######################################
 
@@ -215,6 +228,17 @@ def transform_feature_power(x, features, power):
         tx = c.copy()
         #tx[:,i] = featurepower
         
+    return tx
+
+#####################################  --  INTER-PRODUCT -- ###################################
+
+def transform_feature_inter_product(x, features):
+    tx = x.copy()
+    featureproduct = tx[:,features[0]] * tx[:,features[1]]
+    c = np.c_[tx, featureproduct]
+    tx = c.copy()
+    #tx[:,i] = featurepower
+
     return tx
 #####################################  --  SEPARATE PRI_jet_num -- ###################################
 
