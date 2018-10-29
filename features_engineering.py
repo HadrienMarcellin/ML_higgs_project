@@ -93,7 +93,7 @@ def standardize_features(tx, features):
 
 ##################################### -- LOG -- ######################################
 
-def transform_feature_log(x, features):
+def transform_feature_log(x, features, replace):
     tx = x.copy()
     
     features_min = []
@@ -103,16 +103,20 @@ def transform_feature_log(x, features):
         f_min = np.nanmin(tx[:,i])
         feature = tx[:,i] - f_min + 0.1 #pour enlever les valeurs négatives
         logfeature = np.log(feature)
-        c = np.c_[tx, logfeature]
-        tx = c.copy()
+        if not replace :
+            c = np.c_[tx, logfeature]
+            tx = c.copy()
+        else:
+            tx[:, i] = logfeature
+            
         features_min.append(f_min)
 
-        #tx[:, i] = logfeature
+        
     
     return tx, features_min
 
 ##################################### -- sqrt -- ######################################
-def transform_feature_sqrt(x, features):
+def transform_feature_sqrt(x, features, replace):
     tx = x.copy()
     
     features_min = []
@@ -122,10 +126,14 @@ def transform_feature_sqrt(x, features):
         f_min = np.nanmin(tx[:,i])
         feature = tx[:,i] - f_min + 0.1 #pour enlever les valeurs négatives
         sqrtfeature = np.sqrt(feature)
-        c = np.c_[tx, sqrtfeature]
-        tx = c.copy()
+        if not replace : 
+            c = np.c_[tx, sqrtfeature]
+            tx = c.copy()
+        else :    
+            tx[:, i] = sqrtfeature
+        
         features_min.append(f_min)
-        #tx[:, i] = logfeature
+        
     
     return tx, features_min
 
@@ -143,29 +151,34 @@ def transform_feature_log_feature(x, features):
 
 #####################################  --  SIN -- ###################################
 
-def transform_feature_sin(x, features):
+def transform_feature_sin(x, features, replace):
     tx = x.copy()
     for i in features:
         feature = tx[:,i]
         sinfeature = np.sin(feature)
-        #add the new feature at the end !
-        c = np.c_[tx, sinfeature]
-        tx = c.copy()
-        #tx[:, i] = sinfeature
+        if not replace:
+            #add the new feature at the end !
+            c = np.c_[tx, sinfeature]
+            tx = c.copy()
+        else:
+            tx[:, i] = sinfeature
     
     return tx
 
 #####################################  --  COS -- ###################################
 
-def transform_feature_cos(x, features):
+def transform_feature_cos(x, features, replace):
     tx = x.copy()
+    
     for i in features:
         feature = tx[:,i]
         cosfeature = np.cos(feature)
-        #add the new feature at the end !
-        c = np.c_[tx, cosfeature]
-        tx = c.copy()
-        #tx[:, i] = cosfeature
+        if not replace:
+            #add the new feature at the end !
+            c = np.c_[tx, cosfeature]
+            tx = c.copy()
+        else:
+            tx[:, i] = cosfeature
     
     return tx
 
@@ -219,14 +232,20 @@ def transform_feature_arctan(x, features):
 
 #####################################  --  POWER2 -- ###################################
 
-def transform_feature_power(x, features, power):
+def transform_feature_power(x, features, power, replace):
+    
+    if features == 'all':
+        features = list(range(x.shape[1]))
+    
     tx = x.copy()
     for i in features:
         feature = tx[:,i]
         featurepower = np.power(feature, power)
-        c = np.c_[tx, featurepower]
-        tx = c.copy()
-        #tx[:,i] = featurepower
+        if not replace :
+            c = np.c_[tx, featurepower]
+            tx = c.copy()
+        else :
+            tx[:,i] = featurepower
         
     return tx
 

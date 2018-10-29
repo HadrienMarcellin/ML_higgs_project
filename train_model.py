@@ -98,7 +98,7 @@ def ridge_regression_exploration(y, tx, ratio, lambdas):
          
     train_test_valid_errors_visualization(lambdas, losses_tr, losses_te, losses_val, 'ridge')
     
-    min_loss, min_lambda = minimum_loss_vector(losses_val, lambdas)
+    min_loss, min_lambda = minimum_loss_vector(losses_te, lambdas)
     
     print("Ridge Resgression, Loss : {0}, Lambda : {1}".format(round(min_loss, 3), min_lambda))
     
